@@ -8,6 +8,7 @@ const fs = require("file-system");
 const mongoose = require("mongoose");
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const tickets = require('./routes/tickets');
 
 app.use(helmet());
 app.use(express.json());
@@ -36,5 +37,6 @@ mongoose.set("useCreateIndex", true);
 
 users.routes(app)
 auth.routes(app)
+tickets.routes(app)
 
 app.listen(port);

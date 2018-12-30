@@ -83,28 +83,6 @@ const routes = function(app) {
       let state = req.body.state;
       let zip = req.body.zip;
 
-      // const userToUpdate = new User({
-      //   firstName: req.body.firstName,
-      //   lastName: req.body.lastName,
-      //   password: hashed,
-      //   email: req.body.email.toLowerCase(),
-      //   address: req.body.address,
-      //   city: req.body.city,
-      //   state: req.body.state,
-      //   zip: req.body.zip
-      // });
-
-      // const userToUpdate = {
-      //   firstName: req.body.firstName,
-      //   lastName: req.body.lastName,
-      //   password: hashed,
-      //   email: req.body.email.toLowerCase(),
-      //   address: req.body.address,
-      //   city: req.body.city,
-      //   state: req.body.state,
-      //   zip: req.body.zip
-      // };
-
       try {
         const user = await User.findOneAndUpdate(
           { _id: id },
