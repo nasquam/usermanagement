@@ -7,7 +7,7 @@ const {
 } = require("../models/tickets");
 
 const routes = function(app) {
-  app.get("/api-v1/tickets", async (req, res) => {
+  app.get("/api-v1/tickets", auth ,async (req, res) => {
     try {
       const result = await Change.find()
       .populate("changeRequester", "firstName lastName email")
@@ -92,7 +92,7 @@ const routes = function(app) {
     }
   });
 
-  app.delete("/api-v1/tickets", auth, async (req, res) => {
+  app.delete("/api-v1/tickets", [auth, admin], async (req, res) => {
     const result = validateID(req.body);
 
     if (!result.error) {

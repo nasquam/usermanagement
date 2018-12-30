@@ -27,7 +27,7 @@ const routes = function(app) {
   });
 
   // ****************** POST METHOD ********************* //
-  app.post("/api-v1/users", auth, async (req, res) => {
+  app.post("/api-v1/users", [auth, admin], async (req, res) => {
 
     const result = validateUser(req.body);
     if (!result.error) {
