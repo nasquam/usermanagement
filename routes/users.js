@@ -133,29 +133,29 @@ const routes = function(app) {
     }
   });
 
-  app.get("/api-v1/users/me", auth, async (req, res) => {
-    console.log(req.user._id);
-    const user = await User.findById(req.user._id)
-      .select("-password")
-      .select("-__v");
-    res.send(user);
-  });
+  // app.get("/api-v1/users/me", auth, async (req, res) => {
+  //   console.log(req.user._id);
+  //   const user = await User.findById(req.user._id)
+  //     .select("-password")
+  //     .select("-__v");
+  //   res.send(user);
+  // });
 
   // ****************** GET BY ID METHOD **************** //
-  // app.get("/api-v1/users/:id", async (req, res) => {
-  //   const id = req.params.id;
-  //   try {
-  //     const user = await User.findById(id);
-  //     if (user) {
-  //       res.status(200).send(user);
-  //     } else {
-  //       res.status(404).send("There was no user with this ID found");
-  //     }
-  //   } catch (error) {
-  //     let result = error.message;
-  //     res.send(result);
-  //   }
-  // });
+  app.get("/api-v1/users/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+      const user = await User.findById(id);
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        res.status(404).send("There was no user with this ID found");
+      }
+    } catch (error) {
+      let result = error.message;
+      res.send(result);
+    }
+  });
 };
 
 module.exports.routes = routes;
