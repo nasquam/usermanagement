@@ -1,6 +1,44 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 
+const noteSchema = new mongoose.Schema({
+  noteUser: {
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User" // User would be another collection in the Mongo DB
+  },
+  noteDate: {
+    type: Date,
+    required: true,
+    maxlength: 99,
+    trim: true
+  },
+  noteCustomer: {
+    type: String,
+    required: true,
+    maxlength: 9999,
+    trim: true
+  },
+  noteInternal: {
+    type: String,
+    maxlength: 9999,
+    trim: true
+  }
+});
+
+function validateNote(note) {
+  const schema = {
+    noteUser: Joi.string()
+      .min(24)
+      .max(24)
+      .required(),
+    noteDate: Joi.date().required(),
+    noteCustomer: Joi.string().max(9999),
+    noteInternal: Joi.string().max(9999)
+  };
+  return Joi.validate(note, schema);
+}
+
 const changeSchema = new mongoose.Schema({
   changeRequester: {
     type: mongoose.Schema.Types.ObjectId,
@@ -77,7 +115,8 @@ const changeSchema = new mongoose.Schema({
     type: String,
     maxlength: 9999,
     trim: true
-  }
+  },
+  notes: [noteSchema]
 });
 
 function validateTicket(ticket) {
@@ -123,37 +162,20 @@ function validateTicket(ticket) {
       .max(99),
     changeCloseNotes: Joi.string()
       .min(2)
-      .max(9999)
+      .max(9999),
+    notes: Joi.array().items(
+      Joi.object().keys({
+        noteUser: Joi.string()
+          .min(24)
+          .max(24),
+        noteDate: Joi.date(),
+        noteCustomer: Joi.string().max(9999),
+        noteInternal: Joi.string().max(9999)
+      })
+    )
   };
   return Joi.validate(ticket, schema);
 }
-
-const noteSchema = new mongoose.Schema({
-  noteUser: {
-    type: String,
-    required: true,
-    maxlength: 99,
-    trim: true
-  },
-  noteDate: {
-    type: Date,
-    required: true,
-    maxlength: 99,
-    trim: true
-  },
-  noteCustomer: {
-    type: String,
-    required: true,
-    maxlength: 9999,
-    trim: true
-  },
-  noteInternal: {
-    type: String,
-    required: true,
-    maxlength: 9999,
-    trim: true
-  }
-});
 
 function validateID(id) {
   const schema = {
@@ -161,13 +183,27 @@ function validateID(id) {
       .min(24)
       .max(24)
   };
+
   return Joi.validate(id, schema);
 }
 
 const Change = mongoose.model("Change", changeSchema);
 
+async function addNote(id, note) {
+  try {
+    let result = await Change.findById(id);
+    result.notes.push(note);
+    result = await result.save();
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
+
 module.exports.Change = Change;
 module.exports.changeSchema = changeSchema;
 module.exports.noteSchema = noteSchema;
+module.exports.addNote = addNote;
 module.exports.validateID = validateID;
 module.exports.validateTicket = validateTicket;
+module.exports.validateNote = validateNote;
