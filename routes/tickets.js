@@ -1,7 +1,7 @@
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const {
-  Change,
+  Ticket,
   validateTicket,
   validateID,
   validateNote,
@@ -11,8 +11,8 @@ const {
 const routes = function(app) {
   app.get("/api-v1/tickets", auth, async (req, res) => {
     try {
-      const result = await Change.find()
-        .populate("changeRequester", "firstName lastName email")
+      const result = await Ticket.find()
+        .populate("ticketRequester", "firstName lastName email")
         .select("-__v");
       res.send(result);
     } catch (error) {
@@ -40,25 +40,25 @@ const routes = function(app) {
     }
 
     if (!result.error) {
-      let changeToAdd = new Change({
-        changeRequester: req.body.changeRequester,
-        changeTitle: req.body.changeTitle,
-        changeType: req.body.changeType,
-        changePhase: req.body.changePhase,
-        changeJustification: req.body.changeJustification,
-        changeDeploymentPlan: req.body.changeDeploymentPlan,
-        changeBackoutPlan: req.body.changeBackoutPlan,
-        changeTestPlan: req.body.changeTestPlan,
-        changeImpactAnalysis: req.body.changeImpactAnalysis,
-        changeStartDate: req.body.changeStartDate,
-        changeEndDate: req.body.changeEndDate,
-        changeCABRequired: req.body.changeCABRequired,
+      let ticketToAdd = new Ticket({
+        ticketRequester: req.body.ticketRequester,
+        ticketTitle: req.body.ticketTitle,
+        ticketType: req.body.ticketType,
+        ticketPhase: req.body.ticketPhase,
+        ticketJustification: req.body.ticketJustification,
+        ticketDeploymentPlan: req.body.ticketDeploymentPlan,
+        ticketBackoutPlan: req.body.ticketBackoutPlan,
+        ticketTestPlan: req.body.ticketTestPlan,
+        ticketImpactAnalysis: req.body.ticketImpactAnalysis,
+        ticketStartDate: req.body.ticketStartDate,
+        ticketEndDate: req.body.ticketEndDate,
+        ticketCABRequired: req.body.ticketCABRequired,
         notes: notes
       });
 
       try {
-        let change = await changeToAdd.save();
-        res.send(change);
+        let ticket = await ticketToAdd.save();
+        res.send(ticket);
       } catch (error) {
         res.status(400).send(error);
       }
@@ -72,21 +72,21 @@ const routes = function(app) {
     if (!result.error) {
       const id = req.body.id;
       try {
-        let ticket = await Change.findByIdAndUpdate(
+        let ticket = await Ticket.findByIdAndUpdate(
           { _id: id },
           {
-            changeRequester: req.body.changeRequester,
-            changeTitle: req.body.changeTitle,
-            changeType: req.body.changeType,
-            changePhase: req.body.changePhase,
-            changeJustification: req.body.changeJustification,
-            changeDeploymentPlan: req.body.changeDeploymentPlan,
-            changeBackoutPlan: req.body.changeBackoutPlan,
-            changeTestPlan: req.body.changeTestPlan,
-            changeImpactAnalysis: req.body.changeImpactAnalysis,
-            changeStartDate: req.body.changeStartDate,
-            changeEndDate: req.body.changeEndDate,
-            changeCABRequired: req.body.changeCABRequired
+            ticketRequester: req.body.ticketRequester,
+            ticketTitle: req.body.ticketTitle,
+            ticketType: req.body.ticketType,
+            ticketPhase: req.body.ticketPhase,
+            ticketJustification: req.body.ticketJustification,
+            ticketDeploymentPlan: req.body.ticketDeploymentPlan,
+            ticketBackoutPlan: req.body.ticketBackoutPlan,
+            ticketTestPlan: req.body.ticketTestPlan,
+            ticketImpactAnalysis: req.body.ticketImpactAnalysis,
+            ticketStartDate: req.body.ticketStartDate,
+            ticketEndDate: req.body.ticketEndDate,
+            ticketCABRequired: req.body.ticketCABRequired
           },
           { new: true }
         );
@@ -111,11 +111,11 @@ const routes = function(app) {
     if (!result.error) {
       const id = req.body.id;
       try {
-        const change = await Change.findByIdAndDelete(id);
-        if (!change) {
-          res.status(404).send("There was no change with this ID found");
+        const ticket = await Ticket.findByIdAndDelete(id);
+        if (!ticket) {
+          res.status(404).send("There was no ticket with this ID found");
         } else {
-          res.send(change);
+          res.send(ticket);
         }
       } catch (error) {
         res.send(error.message);
@@ -162,7 +162,7 @@ const routes = function(app) {
       if (!validTicketID.error) {
         if (!validNoteID.error) {
           try {
-            let ticket = await Change.findById(ticketID);
+            let ticket = await Ticket.findById(ticketID);
             ticket.notes.id(noteID).remove();
             let result = await ticket.save();
             res.send(result);
@@ -191,7 +191,7 @@ const routes = function(app) {
       if (!validNoteID.error) {
         try {
 
-          let ticket = await Change.findById(ticketID);
+          let ticket = await Ticket.findById(ticketID);
           let note = await ticket.notes.id(noteID)
           let now = Date.now()
           let userID = note.noteUser.toString();

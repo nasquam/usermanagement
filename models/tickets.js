@@ -39,79 +39,79 @@ function validateNote(note) {
   return Joi.validate(note, schema);
 }
 
-const changeSchema = new mongoose.Schema({
-  changeRequester: {
+const ticketSchema = new mongoose.Schema({
+  ticketRequester: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User" // User would be another collection in the Mongo DB
   },
-  changeTitle: {
+  ticketTitle: {
     type: String,
     required: true,
     maxlength: 255,
     trim: true
   },
-  changeType: {
+  ticketType: {
     type: String,
     required: true,
     maxlength: 99,
     trim: true
   },
-  changePhase: {
+  ticketPhase: {
     type: String,
     required: true,
     maxlength: 99,
     trim: true
   },
-  changeJustification: {
+  ticketJustification: {
     type: String,
     required: true,
     maxlength: 9999,
     trim: true
   },
-  changeDeploymentPlan: {
+  ticketDeploymentPlan: {
     type: String,
     required: true,
     maxlength: 9999,
     trim: true
   },
-  changeBackoutPlan: {
+  ticketBackoutPlan: {
     type: String,
     required: true,
     maxlength: 9999,
     trim: true
   },
-  changeTestPlan: {
+  ticketTestPlan: {
     type: String,
     required: true,
     maxlength: 9999,
     trim: true
   },
-  changeImpactAnalysis: {
+  ticketImpactAnalysis: {
     type: String,
     required: true,
     maxlength: 9999,
     trim: true
   },
-  changeStartDate: {
+  ticketStartDate: {
     type: Date,
     required: true,
     trim: true
   },
-  changeEndDate: {
+  ticketEndDate: {
     type: Date,
     required: true,
     trim: true
   },
-  changeCABRequired: {
+  ticketCABRequired: {
     type: Boolean,
     required: true
   },
-  changeCloseCode: {
+  ticketCloseCode: {
     type: String,
     maxlength: 99,
     trim: true
   },
-  changeCloseNotes: {
+  ticketCloseNotes: {
     type: String,
     maxlength: 9999,
     trim: true
@@ -124,43 +124,43 @@ function validateTicket(ticket) {
     id: Joi.string()
       .min(24)
       .max(24),
-    changeRequester: Joi.string()
+    ticketRequester: Joi.string()
       .min(24)
       .max(24)
       .required(),
-    changeTitle: Joi.string()
+    ticketTitle: Joi.string()
       .min(2)
       .max(255)
       .required(),
-    changeType: Joi.string()
+    ticketType: Joi.string()
       .min(2)
       .max(99)
       .required(),
-    changePhase: Joi.string()
+    ticketPhase: Joi.string()
       .max(99)
       .required(),
-    changeJustification: Joi.string()
+    ticketJustification: Joi.string()
       .max(9999)
       .required(),
-    changeDeploymentPlan: Joi.string()
+    ticketDeploymentPlan: Joi.string()
       .max(9999)
       .required(),
-    changeBackoutPlan: Joi.string()
+    ticketBackoutPlan: Joi.string()
       .max(9999)
       .required(),
-    changeTestPlan: Joi.string()
+    ticketTestPlan: Joi.string()
       .max(9999)
       .required(),
-    changeImpactAnalysis: Joi.string()
+    ticketImpactAnalysis: Joi.string()
       .max(9999)
       .required(),
-    changeStartDate: Joi.date().required(),
-    changeEndDate: Joi.date().required(),
-    changeCABRequired: Joi.boolean().required(),
-    changeCloseCode: Joi.string()
+    ticketStartDate: Joi.date().required(),
+    ticketEndDate: Joi.date().required(),
+    ticketCABRequired: Joi.boolean().required(),
+    ticketCloseCode: Joi.string()
       .min(2)
       .max(99),
-    changeCloseNotes: Joi.string()
+    ticketCloseNotes: Joi.string()
       .min(2)
       .max(9999),
     notes: Joi.array().items(
@@ -187,11 +187,11 @@ function validateID(id) {
   return Joi.validate(id, schema);
 }
 
-const Change = mongoose.model("Change", changeSchema);
+const Ticket = mongoose.model("Ticket", ticketSchema);
 
 async function addNote(id, note) {
   try {
-    let result = await Change.findById(id);
+    let result = await Ticket.findById(id);
     result.notes.push(note);
     result = await result.save();
     return result;
@@ -200,8 +200,8 @@ async function addNote(id, note) {
   }
 }
 
-module.exports.Change = Change;
-module.exports.changeSchema = changeSchema;
+module.exports.Ticket = Ticket;
+module.exports.ticketSchema = ticketSchema;
 module.exports.noteSchema = noteSchema;
 module.exports.addNote = addNote;
 module.exports.validateID = validateID;
