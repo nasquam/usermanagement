@@ -3,28 +3,6 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
-// const postSchema = new mongoose.Schema({
-//   title: String,
-//   slug: String,
-//   body: String,
-//   user: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: "User" // Author would be another collection in the Mongo DB
-//   }
-// });
-
-// const Post = mongoose.model("Post", postSchema);
-
-// async function getPosts() {
-//   const post = await Post.find()
-//     // since we've defined a user object (collection object), in our posts data model we can use 
-//     // the populate() method to get the referenced collection. The first param in the populate method
-//     // is the property in our data model, the second set of params are the fields we want from that collection 
-//     .populate("user", "firstName lastName email") 
-//     .select("name user");
-//   console.log(post);
-// }
-
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -146,10 +124,39 @@ function validateAuth(user) {
 function validateID(id) {
   const schema = {
     id: Joi.string()
+      .required()
       .min(24)
       .max(24)
   };
   return Joi.validate(id, schema);
+}
+
+async function getAllUsers(){
+  try {
+    const result = await User.find()
+      .sort("lastName")
+      .sort("firstName")
+      .select("-password")
+      .select("-__v");
+    return result;
+  } catch (error) {
+    return error
+  }
+}
+
+async function deleteAUser(id){
+
+  try {
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return "There was no user with this ID found";
+    } else {
+     return user
+    }
+  } catch (error) {
+    return error.message;
+  }
+
 }
 
 module.exports.userSchema = userSchema;
@@ -158,3 +165,5 @@ module.exports.validateAuth = validateAuth;
 module.exports.validateID = validateID;
 module.exports.genAuthToken = genAuthToken;
 module.exports.User = User;
+module.exports.getAllUsers = getAllUsers;
+module.exports.deleteAUser = deleteAUser;

@@ -11,10 +11,11 @@ module.exports = function() {
 
   mongoose
     .connect(
-      `mongodb+srv://niodbuser:${mongoPass}@nasquam-z7win.mongodb.net/exampleApp?retryWrites=true`,
+      //`mongodb+srv://niodbuser:${mongoPass}@nasquam-z7win.mongodb.net/exampleApp?retryWrites=true`,
+      `'mongodb://localhost:27017/UserManagement`,
       { useNewUrlParser: true }
     )
-    .then(() => console.log("Connection to the remote database made..."))
+    .then(() => console.log("Connection to the database made..."))
     .catch(err => {
       console.error("Could not connect to MongoDB...", err.stack);
       process.exit(1);
