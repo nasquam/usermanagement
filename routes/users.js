@@ -3,8 +3,9 @@ const {
   validateUser,
   validateID,
   genAuthToken,
-  getAllUsers,
-  deleteAUser
+  getUser,
+  getUsers,
+  deleteUser
 } = require("../models/users")
 const auth = require("../middleware/auth")
 const admin = require("../middleware/admin")
@@ -13,15 +14,12 @@ const bcrypt = require("bcryptjs")
 const routes = function(app) {
   // ****************** GET METHOD ********************** //
   app.get("/api-v1/users", async (req, res) => {
-
     try {
-      let results = await getAllUsers()
+      let results = await getUsers()
       res.send(results)
     } catch (error) {
-      res.status(500).send("Internal server error, please try again later")
+      res.status(500).send(error.message)
     }
-
-
   })
 
   // ****************** POST METHOD ********************* //
@@ -124,7 +122,7 @@ const routes = function(app) {
       const id = req.params.id
 
       try {
-        let result = await deleteAUser(id)
+        let result = await deleteUser(id)
         res.send(result)
       } catch (error) {
         res.status(500).send(error.message)
@@ -138,17 +136,8 @@ const routes = function(app) {
   // ****************** GET BY ID METHOD **************** //
   app.get("/api-v1/users/:id", async (req, res) => {
     const id = req.params.id
-    try {
-      const user = await User.findById(id)
-      if (user) {
-        res.status(200).send(user)
-      } else {
-        res.status(404).send("There was no user with this ID found")
-      }
-    } catch (error) {
-      let result = error.message
-      res.send(result)
-    }
+    let result = await getUser(id)
+    res.send(result)
   })
 }
 

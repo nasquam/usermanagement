@@ -10,9 +10,9 @@ module.exports = function(app) {
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.static("public"));
 
-  // Calling routes here
+  // Calling routes here, first route is for static content
+  app.use(express.static("public"));
   users.routes(app);
   auth.routes(app);
   tickets.routes(app);

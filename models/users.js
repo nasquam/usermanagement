@@ -131,7 +131,7 @@ function validateID(id) {
   return Joi.validate(id, schema);
 }
 
-async function getAllUsers(){
+async function getUsers(){
   try {
     const result = await User.find()
       .sort("lastName")
@@ -140,11 +140,22 @@ async function getAllUsers(){
       .select("-__v");
     return result;
   } catch (error) {
-    return error
+    return error.message
   }
 }
 
-async function deleteAUser(id){
+async function getUser(id){
+
+  try {
+    const user = await User.findById(id)
+    return user
+  } catch (error) {
+    return error.message
+  }
+
+}
+
+async function deleteUser(id){
 
   try {
     const user = await User.findByIdAndDelete(id);
@@ -165,5 +176,6 @@ module.exports.validateAuth = validateAuth;
 module.exports.validateID = validateID;
 module.exports.genAuthToken = genAuthToken;
 module.exports.User = User;
-module.exports.getAllUsers = getAllUsers;
-module.exports.deleteAUser = deleteAUser;
+module.exports.getUser = getUser;
+module.exports.getUsers = getUsers;
+module.exports.deleteAUser = deleteUser;

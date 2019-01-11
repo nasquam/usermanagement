@@ -12,7 +12,7 @@ module.exports = function() {
   mongoose
     .connect(
       //`mongodb+srv://niodbuser:${mongoPass}@nasquam-z7win.mongodb.net/exampleApp?retryWrites=true`,
-      `'mongodb://localhost:27017/UserManagement`,
+      `mongodb://localhost:27017/UserManagement`,
       { useNewUrlParser: true }
     )
     .then(() => console.log("Connection to the database made..."))
